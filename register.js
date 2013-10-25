@@ -32,8 +32,9 @@ regApp.controller('RegController', function RegController ($scope, $http)
 
 	$scope.canRegister = function()
 	{
-		return $scope.passwordValid && $scope.hasValue($scope.user.name) && $scope.hasValue($scope.user.type);
-	}
+		var truth = !$scope.user.exists;
+		return $scope.passwordValid && $scope.hasValue($scope.user.name) && $scope.hasValue($scope.user.type) && $scope.hasValue($scope.user.exists) && truth;
+	};
 
 	$scope.hasValue = function(val)
 	{
@@ -42,28 +43,32 @@ regApp.controller('RegController', function RegController ($scope, $http)
 
 	$scope.userValid = function()
 	{
+		$scope.inProgress = true;
 		$http.post('checkName.php', $scope.user.name)
 			.success(function(data, status)
 			{
 				$scope.status = status;
-				$scope.user.exists = data;
+				$scope.user.exists = (data == "true");
 			}).error (function(data, status)
 			{
-				$scope.user.exists = data;
+				$scope.user.exists = (data == "true");
 				$scope.status = status;
 			});
+		$scope.inProgress = false;
 	}
 	$scope.register = function ()
 	{
+		$scope.inProgress = true;
+
 		$http.post ('register.php', $scope.user)
 			.success(function(data, status)
                         {
-                                $scope.status = status;
+                                $scope.user.registered = (data == "success");
                         }).error (function(data, status)
                         {
-                                $scope.user.exists = data;
+                                $scope.user.exists = (data == false);
                         });
-
+		$scope.inProgress = false;
 	}
 	
 	

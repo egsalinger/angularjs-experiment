@@ -3,12 +3,13 @@
 <head>
 	<script src="angular.min.js"></script>
 	<script src="register.js"></script>
+	<script src="login.js"></script>
 </head>
 <body>
 	<div ng-controller="RegController">
-		<form name=registrationForm novalidate class="simple-form">
+		<form name=registrationForm novalidate class="simple-form" ng-show="!user.registered">
 			Username: <input type="text" ng-model="user.name" name="uName" required/><br />
-			<button ng-click="userValid()" ng-disabled="!hasValue(user.name)">Check Username</button><br />
+			<button ng-click="userValid()" ng-disabled="!hasValue(user.name) || inProgress">Check Username</button><br />
 			<div ng-show="user.exists" class="msg-error">
 				Username is taken.
 			</div>
@@ -20,9 +21,19 @@
 			Type: <input type="radio" ng-model="user.type" value="1" />Customer
 			<input type="radio" ng-model="user.type" value="2" />Technician<br />
 			<button ng-click="reset()" ng-disabled="isUnchanged(user)">Clear</button>
-			<button ng-click="register(user)" ng-disabled="!canRegister()">Register</button>
+			<button ng-click="register(user)" ng-disabled="!canRegister() || inProgress">Register</button>
 		</form>
+		<div ng-controller="LoginController" ng-show="user.registered">
+			<h1>Congratulations!</h1><br>You have registered sucessfully. Please login below.<br /><br />
+			<form name=loginForm novalidate class="simple-form">
+				Username: <input type="text" ng-model="login.name" name ="lName" required><br />
+				Password: <input type="password" ng-model="login.password" name="lPass" required/><br />
+				<button ng-click="userLogin(login)">Login</button>
+			</form>
+		</div>
 	</div>
+	
+
 
 <style type="text/css">
 	.css-form input.ng-invalid.ng-dirty

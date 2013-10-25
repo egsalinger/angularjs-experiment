@@ -29,11 +29,11 @@ $query = "INSERT INTO Users VALUES" . "('$name','$pass','$type')";
 
 if (mysqli_query($link, $query))
 {
-	echo "Success!";
+	echo "success";
 }
 else
 {
-	echo "Failure!";
+	echo "failure";
 }
 //echo "$query";
 
