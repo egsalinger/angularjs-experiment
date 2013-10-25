@@ -11,17 +11,21 @@ if (mysqli_connect_errno ())
 }
 
 $data = file_get_contents("php://input");
-//mysqli_escape_string($link, $data);
 
 $objdata = json_decode ($data, true);
 
 $name = mysqli_escape_string ($link, $objdata["name"]);
-$pass = mysqli_escape_string ($link, $objdata["password"]);
 $type = mysqli_escape_string ($link, $objdata["type"]);
+//$pass = mysqli_escape_string ($link, $unhashedpassword]);
 
-//echo "$name $pass $type";
+$salt ='$2a$10$'.$name;
+$unhashedpwd = $objdata['password'];
+$password = crypt($unhashedpassword,$salt);
+$pass = mysqli_escape_string ($link, $password);
 
-$query = "INSERT INTO Users VALUES" . "('$user','$pass','$type')";
+
+
+$query = "INSERT INTO Users VALUES" . "('$name','$pass','$type')";
 
 if (mysqli_query($link, $query))
 {
@@ -31,6 +35,7 @@ else
 {
 	echo "Failure!";
 }
+//echo "$query";
 
 /*
 
